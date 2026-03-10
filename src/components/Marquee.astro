@@ -1,0 +1,44 @@
+---
+interface Props {
+  items: string[];
+  speed?: 'slow' | 'normal' | 'fast';
+}
+
+const { items, speed = 'normal' } = Astro.props;
+
+const durations = { slow: '50s', normal: '30s', fast: '18s' };
+const duration = durations[speed];
+
+// Duplicate items for seamless loop
+const allItems = [...items, ...items];
+---
+
+<div
+  class="marquee-track overflow-hidden bg-teal py-3 select-none cursor-default"
+  aria-label="Upcoming events ticker"
+>
+  <div
+    class="marquee-content flex gap-0 whitespace-nowrap"
+    style={`animation: marquee ${duration} linear infinite;`}
+  >
+    {allItems.map((item) => (
+      <span class="flex items-center gap-6">
+        <span class="font-sans text-sm font-medium tracking-wide text-white px-6">
+          {item}
+        </span>
+        <span class="text-white/40 text-xs" aria-hidden="true">✦</span>
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .marquee-track:hover .marquee-content {
+    animation-play-state: paused;
+  }
+</style>

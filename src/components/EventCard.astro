@@ -1,0 +1,164 @@
+---
+export interface EventData {
+  title: string;
+  date: string;         // ISO string, e.g. "2026-03-28T19:00:00"
+  endDate?: string;     // ISO string for end time
+  location: string;
+  description: string;
+  tag?: string;
+  imageUrl?: string;
+}
+
+interface Props {
+  event: EventData;
+}
+
+const { event } = Astro.props;
+
+// Format display date
+const dateObj = new Date(event.date);
+const endDateObj = event.endDate ? new Date(event.endDate) : null;
+
+const displayDate = dateObj.toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+const displayTime = dateObj.toLocaleTimeString('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+});
+
+const endTime = endDateObj
+  ? endDateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+  : null;
+
+// Google Calendar URL
+function toGCal(date: Date) {
+  return date.toISOString().replace(/[-:]/g, '').replace('.000', '');
+}
+const gcalStart = toGCal(dateObj);
+const gcalEnd = toGCal(endDateObj ?? new Date(dateObj.getTime() + 2 * 60 * 60 * 1000));
+const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
+
+// .ics content (data URI)
+const icsContent = [
+  'BEGIN:VCALENDAR',
+  'VERSION:2.0',
+  'PRODID:-//SAYA//StAnnYoungAdults//EN',
+  'BEGIN:VEVENT',
+  `DTSTART:${gcalStart}`,
+  `DTEND:${gcalEnd}`,
+  `SUMMARY:${event.title}`,
+  `DESCRIPTION:${event.description}`,
+  `LOCATION:${event.location}`,
+  'STATUS:CONFIRMED',
+  'END:VEVENT',
+  'END:VCALENDAR',
+].join('\r\n');
+
+const icsDataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
+const icsFilename = `${event.title.replace(/\s+/g, '-').toLowerCase()}.ics`;
+---
+
+<article class="group bg-white border border-border hover:border-teal transition-colors duration-200 flex flex-col">
+  <!-- Image -->
+  <div class="relative overflow-hidden aspect-[4/3] bg-background-alt">
+    {event.imageUrl ? (
+      <img
+        src={event.imageUrl}
+        alt={event.title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-background-alt to-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-border" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    )}
+    {event.tag && (
+      <span class="absolute top-3 left-3 bg-teal text-white text-xs font-sans font-medium tracking-wide uppercase px-2.5 py-1">
+        {event.tag}
+      </span>
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="p-6 flex flex-col flex-1">
+    <p class="font-sans text-xs text-muted tracking-wide uppercase mb-2">
+      {displayDate}
+      {endTime ? ` · ${displayTime} – ${endTime}` : ` · ${displayTime}`}
+    </p>
+    <h3 class="font-display text-xl text-ink mb-2 leading-snug">{event.title}</h3>
+    <p class="font-sans text-sm text-muted mb-1 flex items-center gap-1.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      {event.location}
+    </p>
+    <p class="font-sans text-sm text-muted leading-relaxed mt-3 flex-1">{event.description}</p>
+
+    <!-- Calendar actions -->
+    <div class="flex items-center gap-3 mt-6 pt-5 border-t border-border">
+      <a
+        href={gcalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-1.5 text-xs font-sans font-medium text-teal hover:text-teal-dark transition-colors"
+        title="Add to Google Calendar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Google Cal
+      </a>
+      <a
+        href={icsDataUri}
+        download={icsFilename}
+        class="flex items-center gap-1.5 text-xs font-sans font-medium text-teal hover:text-teal-dark transition-colors"
+        title="Download .ics for Apple Calendar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        .ics
+      </a>
+      <button
+        class="share-btn flex items-center gap-1.5 text-xs font-sans font-medium text-teal hover:text-teal-dark transition-colors ml-auto"
+        data-title={event.title}
+        data-url={`/events`}
+        title="Share this event"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+        </svg>
+        Share
+      </button>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll('.share-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const title = (btn as HTMLElement).dataset.title ?? 'SAYA Event';
+      const url = window.location.origin + ((btn as HTMLElement).dataset.url ?? '/events');
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, url });
+        } catch (_) { /* user cancelled */ }
+      } else {
+        await navigator.clipboard.writeText(url);
+        const original = btn.innerHTML;
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
+        setTimeout(() => { btn.innerHTML = original; }, 2000);
+      }
+    });
+  });
+</script>

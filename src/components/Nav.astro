@@ -1,0 +1,109 @@
+---
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Events', href: '/events' },
+  { label: 'Connect', href: '/connect' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
+  <nav class="container-wide flex items-center justify-between h-16">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-3 group" aria-label="SAYA Home">
+      <img
+        src="/images/saya-logo.svg"
+        alt="SAYA"
+        class="h-9 w-9 text-ink transition-opacity group-hover:opacity-60"
+        style="color: #0A0A0A"
+      />
+      <span class="hidden sm:inline text-muted text-xs font-sans tracking-widest uppercase pt-0.5">
+        St. Ann Young Adults
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="hidden md:flex items-center gap-8" role="list">
+      {navLinks.map(({ label, href }) => (
+        <li>
+          <a
+            href={href}
+            class={`font-sans text-sm font-medium tracking-wide transition-colors ${
+              currentPath === href
+                ? 'text-teal border-b border-teal pb-0.5'
+                : 'text-ink hover:text-teal'
+            }`}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a href="/connect" class="btn-primary text-xs py-2 px-5">
+          Get Connected
+        </a>
+      </li>
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button
+      id="nav-toggle"
+      class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 group"
+      aria-label="Toggle navigation"
+      aria-expanded="false"
+    >
+      <span class="hamburger-bar block w-6 h-0.5 bg-ink transition-all duration-300 group-aria-expanded:rotate-45 group-aria-expanded:translate-y-2"></span>
+      <span class="hamburger-bar block w-6 h-0.5 bg-ink transition-all duration-300 group-aria-expanded:opacity-0"></span>
+      <span class="hamburger-bar block w-6 h-0.5 bg-ink transition-all duration-300 group-aria-expanded:-rotate-45 group-aria-expanded:-translate-y-2"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="md:hidden hidden border-t border-border bg-white"
+    aria-hidden="true"
+  >
+    <ul class="container-wide py-4 flex flex-col gap-4" role="list">
+      {navLinks.map(({ label, href }) => (
+        <li>
+          <a
+            href={href}
+            class={`block font-sans text-base font-medium py-2 transition-colors ${
+              currentPath === href ? 'text-teal' : 'text-ink hover:text-teal'
+            }`}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+      <li class="pt-2">
+        <a href="/connect" class="btn-primary w-full text-center block">
+          Get Connected
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = !menu?.classList.contains('hidden');
+    menu?.classList.toggle('hidden', isOpen);
+    menu?.setAttribute('aria-hidden', String(isOpen));
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  // Close on nav click
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      menu.setAttribute('aria-hidden', 'true');
+      toggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

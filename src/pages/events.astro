@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EventCard from '../components/EventCard.astro';
+import type { EventData } from '../components/EventCard.astro';
+
+const events: EventData[] = [
+  // ── Recurring ──────────────────────────────────────────────
+  {
+    title: 'DECLARE — Young Adult Night',
+    date: '2026-03-23T19:00:00',
+    endDate: '2026-03-23T21:00:00',
+    location: 'Chapel at St. Ann, Coppell TX',
+    description: 'Our bi-weekly gathering for prayer, worship, and community. Every 2nd and 4th Monday at 7PM. Come as you are.',
+    tag: 'Recurring',
+  },
+  {
+    title: 'DECLARE — Young Adult Night',
+    date: '2026-04-13T19:00:00',
+    endDate: '2026-04-13T21:00:00',
+    location: 'Chapel at St. Ann, Coppell TX',
+    description: 'Our bi-weekly gathering for prayer, worship, and community. Every 2nd and 4th Monday at 7PM. Come as you are.',
+    tag: 'Recurring',
+  },
+  // ── Social ────────────────────────────────────────────────
+  {
+    title: 'Game Night',
+    date: '2026-03-21T19:00:00',
+    endDate: '2026-03-21T22:00:00',
+    location: 'St. Ann Parish Hall, Coppell TX',
+    description: 'Board games, card games, great snacks, and even better people. Bring your favorite game or just show up.',
+    tag: 'Social',
+  },
+  {
+    title: 'Spring Social',
+    date: '2026-05-02T18:00:00',
+    endDate: '2026-05-02T21:00:00',
+    location: 'TBD — Coppell area',
+    description: 'Our spring community get-together. Details to be announced soon — follow us on Instagram for updates!',
+    tag: 'Social',
+  },
+  // ── Service ───────────────────────────────────────────────
+  {
+    title: 'Service Saturday',
+    date: '2026-04-05T09:00:00',
+    endDate: '2026-04-05T12:00:00',
+    location: 'Meet at St. Ann Catholic Church, Coppell TX',
+    description: 'Give back to the Coppell community alongside fellow young adults. We\'ll serve together at a local food pantry.',
+    tag: 'Service',
+  },
+  // ── Faith ─────────────────────────────────────────────────
+  {
+    title: 'Holy Week Adoration',
+    date: '2026-04-18T20:00:00',
+    endDate: '2026-04-18T22:00:00',
+    location: 'Chapel at St. Ann, Coppell TX',
+    description: 'A special evening of Eucharistic Adoration during Holy Week. Come and spend quiet time before the Lord.',
+    tag: 'Faith',
+  },
+];
+---
+
+<BaseLayout
+  title="Events — SAYA"
+  description="Upcoming events for St. Ann Young Adults in Coppell, TX. Social gatherings, prayer nights, service, and more."
+>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section class="pt-32 pb-16 md:pt-40 md:pb-20 bg-background-alt border-b border-border" aria-label="Events hero">
+    <div class="container-wide">
+      <div class="max-w-2xl space-y-4 reveal">
+        <p class="font-sans text-xs font-medium tracking-[0.25em] uppercase text-teal">
+          What's Going On
+        </p>
+        <h1 class="font-display text-5xl md:text-6xl text-ink leading-none">
+          Events
+        </h1>
+        <p class="font-sans text-muted text-lg leading-relaxed max-w-lg">
+          From prayer nights to game nights — here's everything coming up in the SAYA community.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ DECLARE CALLOUT -->
+  <section class="py-10 bg-teal/5 border-b border-teal/20" aria-label="DECLARE recurring event info">
+    <div class="container-wide">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4 reveal">
+        <div class="w-10 h-10 rounded-full bg-teal/20 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-sans font-medium text-ink text-sm">
+            <span class="text-teal font-semibold">DECLARE</span> meets every 2nd &amp; 4th Monday at 7PM —
+            <span class="font-normal text-muted">Chapel at St. Ann, Coppell TX</span>
+          </p>
+          <p class="font-sans text-xs text-muted mt-0.5">
+            No RSVP needed. Walk-ins always welcome.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FILTER BAR -->
+  <section class="py-6 bg-white border-b border-border sticky top-16 z-30 shadow-sm" aria-label="Filter events">
+    <div class="container-wide flex items-center gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by category">
+      {['All', 'Recurring', 'Social', 'Service', 'Faith'].map((tag) => (
+        <button
+          class="filter-btn shrink-0 px-4 py-2 font-sans text-xs font-medium tracking-wide uppercase border transition-colors whitespace-nowrap"
+          class:list={['border-border text-muted hover:border-teal hover:text-teal']}
+          data-filter={tag.toLowerCase()}
+          aria-pressed={tag === 'All' ? 'true' : 'false'}
+        >
+          {tag}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ EVENTS GRID -->
+  <section class="py-16 md:py-24 bg-background" aria-label="All events">
+    <div class="container-wide">
+      <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {events.map((event, i) => (
+          <div
+            class="event-item reveal"
+            data-tag={event.tag?.toLowerCase() ?? 'other'}
+            style={`transition-delay: ${(i % 3) * 80}ms`}
+          >
+            <EventCard event={event} />
+          </div>
+        ))}
+      </div>
+
+      <div
+        id="no-results"
+        class="hidden py-20 text-center"
+        role="status"
+        aria-live="polite"
+      >
+        <p class="font-display text-2xl text-ink mb-2">Nothing here yet.</p>
+        <p class="font-sans text-muted text-sm">Try a different filter or check back soon.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ RECURRING NOTE -->
+  <section class="py-16 bg-background-alt border-t border-border" aria-label="Recurring events note">
+    <div class="container-wide">
+      <div class="max-w-xl reveal space-y-4">
+        <h2 class="font-display text-2xl text-ink">Can't make a specific event?</h2>
+        <p class="font-sans text-muted text-base leading-relaxed">
+          DECLARE happens every 2nd and 4th Monday — no sign-up needed, just show up. And new events are added regularly, so check back often or follow us on Instagram for the latest.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <a
+            href="https://instagram.com/stannyoungadults"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-outline text-center"
+          >
+            Follow on Instagram
+          </a>
+          <a href="/connect" class="btn-primary text-center">
+            Stay in the Loop
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const eventItems = document.querySelectorAll<HTMLElement>('.event-item');
+  const noResults = document.getElementById('no-results');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'all';
+
+      // Update button states
+      filterBtns.forEach((b) => {
+        b.setAttribute('aria-pressed', 'false');
+        b.classList.remove('bg-teal', 'text-white', 'border-teal');
+        b.classList.add('border-border', 'text-muted');
+      });
+      btn.setAttribute('aria-pressed', 'true');
+      btn.classList.remove('border-border', 'text-muted');
+      btn.classList.add('bg-teal', 'text-white', 'border-teal');
+
+      // Filter items
+      let visible = 0;
+      eventItems.forEach((item) => {
+        const tag = item.dataset.tag ?? '';
+        const show = filter === 'all' || tag === filter;
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noResults?.classList.toggle('hidden', visible > 0);
+    });
+  });
+
+  // Set "All" active on load
+  filterBtns[0]?.click();
+</script>

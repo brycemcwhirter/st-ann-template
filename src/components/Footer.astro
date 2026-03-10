@@ -1,0 +1,100 @@
+---
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Events', href: '/events' },
+  { label: 'Connect', href: '/connect' },
+];
+
+const socialLinks = [
+  {
+    label: 'Instagram',
+    href: 'https://instagram.com/stannyoungadults',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>`,
+  },
+  {
+    label: 'GroupMe',
+    href: 'https://groupme.com/join_group/saya',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>`,
+  },
+];
+---
+
+<footer class="bg-ink text-white">
+  <div class="container-wide py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <!-- Brand column -->
+      <div class="space-y-4">
+        <img
+          src="/images/saya-logo.svg"
+          alt="SAYA"
+          class="h-12 w-12"
+          style="color: white; filter: brightness(0) invert(1);"
+        />
+        <p class="font-sans text-sm text-gray-400 leading-relaxed max-w-xs">
+          St. Ann Young Adults — a community of Catholics in their 20s &amp; 30s rooted in faith, friendship, and service.
+        </p>
+        <div class="flex items-center gap-4 pt-2">
+          {socialLinks.map(({ label, href, icon }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              class="text-gray-400 hover:text-teal transition-colors"
+              set:html={icon}
+            />
+          ))}
+        </div>
+      </div>
+
+      <!-- Nav column -->
+      <div>
+        <p class="font-sans text-xs font-medium tracking-widest uppercase text-gray-500 mb-4">
+          Navigate
+        </p>
+        <ul class="space-y-3" role="list">
+          {navLinks.map(({ label, href }) => (
+            <li>
+              <a
+                href={href}
+                class="font-sans text-sm text-gray-300 hover:text-white transition-colors"
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact column -->
+      <div>
+        <p class="font-sans text-xs font-medium tracking-widest uppercase text-gray-500 mb-4">
+          Contact
+        </p>
+        <div class="space-y-2">
+          <p class="font-sans text-sm text-gray-300">Amy Kitzman</p>
+          <p class="font-sans text-xs text-gray-500">Young Adult Ministry Coordinator</p>
+          <a
+            href="mailto:amy.kitzman@stannchurch.org"
+            class="font-sans text-sm text-teal-light hover:text-white transition-colors block mt-2"
+          >
+            amy.kitzman@stannchurch.org
+          </a>
+          <p class="font-sans text-sm text-gray-400 pt-2">
+            St. Ann Catholic Church<br />
+            Coppell, TX
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14 pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="font-sans text-xs text-gray-600">
+        &copy; {new Date().getFullYear()} St. Ann Young Adults. All rights reserved.
+      </p>
+      <p class="font-sans text-xs text-gray-700">
+        St. Ann Catholic Church, Coppell TX
+      </p>
+    </div>
+  </div>
+</footer>

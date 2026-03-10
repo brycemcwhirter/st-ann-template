@@ -1,0 +1,159 @@
+---
+interface Slide {
+  gradient: string;
+  imageUrl?: string;
+  eyebrow: string;
+  headline: string;
+  description?: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+const slides: Slide[] = [
+  {
+    gradient: 'from-teal/80 via-[#1a3d45]/70 to-ink/60',
+    eyebrow: 'Upcoming Event',
+    headline: 'DECLARE — Young Adult Night',
+    description: '2nd & 4th Mondays · 7PM · Chapel at St. Ann',
+    ctaLabel: 'Learn More',
+    ctaHref: '/events',
+  },
+  {
+    gradient: 'from-[#2a4a52]/80 via-teal/50 to-ink/70',
+    eyebrow: 'March 21 · 7PM',
+    headline: 'Game Night',
+    description: 'St. Ann Parish Hall · Bring your favorite game or just show up.',
+    ctaLabel: 'See Details',
+    ctaHref: '/events',
+  },
+  {
+    gradient: 'from-ink/70 via-teal/40 to-[#1a3d45]/80',
+    eyebrow: 'April 5 · 9AM',
+    headline: 'Service Saturday',
+    description: 'Give back with us — serving at a local food pantry.',
+    ctaLabel: 'Get Involved',
+    ctaHref: '/events',
+  },
+];
+---
+
+<section
+  id="hero-slideshow"
+  class="relative w-full h-screen overflow-hidden"
+  aria-label="Featured events slideshow"
+>
+  <!-- Slides -->
+  {slides.map((slide, i) => (
+    <div
+      class={`hero-slide absolute inset-0 transition-opacity duration-[600ms] ease-in-out ${i === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      data-index={i}
+      aria-hidden={i !== 0}
+    >
+      <!-- Background: gradient placeholder (Phase 2: swap for real photo via imageUrl) -->
+      <div class={`absolute inset-0 bg-gradient-to-br ${slide.gradient}`} />
+
+      <!-- Teal overlay -->
+      <div class="absolute inset-0 bg-teal/45" />
+
+      <!-- Content — bottom-left anchored -->
+      <div class="absolute inset-0 flex items-end">
+        <div class="container-wide pb-24 md:pb-32 max-w-2xl">
+          <div class="space-y-4">
+            <!-- Eyebrow -->
+            <p class="font-sans text-xs font-medium tracking-[0.25em] uppercase text-white/70">
+              {slide.eyebrow}
+            </p>
+
+            <!-- Headline -->
+            <h1 class="font-display text-4xl sm:text-5xl md:text-6xl text-white leading-tight">
+              {slide.headline}
+            </h1>
+
+            <!-- Description -->
+            {slide.description && (
+              <p class="font-sans text-base md:text-lg text-white/70 leading-relaxed">
+                {slide.description}
+              </p>
+            )}
+
+            <!-- CTA -->
+            <div class="pt-2">
+              <a
+                href={slide.ctaHref}
+                class="inline-block font-sans text-sm font-medium px-6 py-3 bg-white text-teal hover:bg-teal hover:text-white transition-colors duration-200"
+              >
+                {slide.ctaLabel}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+
+  <!-- Left arrow -->
+  <button
+    id="hero-prev"
+    class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+    aria-label="Previous slide"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- Right arrow -->
+  <button
+    id="hero-next"
+    class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+    aria-label="Next slide"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+</section>
+
+<script>
+  const DURATION = 6000;
+
+  const slides = document.querySelectorAll<HTMLElement>('.hero-slide');
+  const prevBtn = document.getElementById('hero-prev') as HTMLButtonElement;
+  const nextBtn = document.getElementById('hero-next') as HTMLButtonElement;
+
+  let current = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setSlide(index: number) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('opacity-100', i === index);
+      slide.classList.toggle('opacity-0', i !== index);
+      slide.classList.toggle('pointer-events-auto', i === index);
+      slide.classList.toggle('pointer-events-none', i !== index);
+      slide.setAttribute('aria-hidden', String(i !== index));
+    });
+    current = index;
+  }
+
+  function startTimer() {
+    if (prefersReducedMotion) return;
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => setSlide((current + 1) % slides.length), DURATION);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    setSlide((current - 1 + slides.length) % slides.length);
+    startTimer();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    setSlide((current + 1) % slides.length);
+    startTimer();
+  });
+
+  // Init
+  setSlide(0);
+  startTimer();
+</script>

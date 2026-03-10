@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IntakeForm from '../components/IntakeForm.astro';
+---
+
+<BaseLayout
+  title="Connect — SAYA"
+  description="Get connected with St. Ann Young Adults in Coppell, TX. Fill out our form and Amy will personally reach out to welcome you."
+>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section class="pt-32 pb-12 md:pt-40 md:pb-16 bg-background-alt border-b border-border" aria-label="Connect page hero">
+    <div class="container-wide">
+      <div class="max-w-xl space-y-4 reveal">
+        <p class="font-sans text-xs font-medium tracking-[0.25em] uppercase text-teal">
+          Get Involved
+        </p>
+        <h1 class="font-display text-5xl md:text-6xl text-ink leading-none">
+          Help us get to know you.
+        </h1>
+        <p class="font-sans text-muted text-lg leading-relaxed">
+          Fill out the form below and Amy will personally reach out to welcome you and answer any questions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FORM + SIDEBAR -->
+  <section class="py-16 md:py-24 bg-background" aria-label="Intake form">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-16 items-start">
+
+        <!-- Form (3 cols) -->
+        <div class="lg:col-span-3 reveal">
+          <IntakeForm />
+        </div>
+
+        <!-- Sidebar (2 cols) -->
+        <aside class="lg:col-span-2 space-y-8 lg:pt-2 reveal" style="transition-delay: 150ms">
+
+          <!-- What to expect -->
+          <div class="bg-background-alt border border-border p-6 space-y-4">
+            <h3 class="font-display text-xl text-ink">What happens next?</h3>
+            <ol class="space-y-3 list-none">
+              {[
+                'Amy receives your info and will reach out within a few days.',
+                'She\'ll answer any questions and point you to upcoming events.',
+                'You\'ll be added to our community channels (GroupMe, etc.) if you\'d like.',
+              ].map((step, i) => (
+                <li class="flex items-start gap-3">
+                  <span class="shrink-0 w-5 h-5 rounded-full bg-teal text-white font-sans text-xs flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p class="font-sans text-sm text-muted leading-relaxed">{step}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <!-- Contact block -->
+          <div class="space-y-5">
+            <h3 class="font-display text-xl text-ink">Or reach out directly.</h3>
+
+            <div class="space-y-1">
+              <p class="font-sans font-medium text-ink text-sm">Amy Kitzman</p>
+              <p class="font-sans text-xs text-muted">Young Adult Ministry Coordinator</p>
+              <a
+                href="mailto:amy.kitzman@stannchurch.org"
+                class="inline-flex items-center gap-2 font-sans text-sm text-teal hover:text-teal-dark transition-colors mt-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                amy.kitzman@stannchurch.org
+              </a>
+            </div>
+
+            <div class="flex flex-col gap-3 pt-1">
+              <a
+                href="https://instagram.com/stannyoungadults"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-3 group"
+              >
+                <div class="w-9 h-9 border border-border flex items-center justify-center text-muted group-hover:border-teal group-hover:text-teal transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-sans text-sm font-medium text-ink group-hover:text-teal transition-colors">Instagram</p>
+                  <p class="font-sans text-xs text-muted">@stannyoungadults</p>
+                </div>
+              </a>
+
+              <a
+                href="https://groupme.com/join_group/saya"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-3 group"
+              >
+                <div class="w-9 h-9 border border-border flex items-center justify-center text-muted group-hover:border-teal group-hover:text-teal transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.98 1.67V6.9a4.85 4.85 0 01-1.21-.21z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-sans text-sm font-medium text-ink group-hover:text-teal transition-colors">GroupMe</p>
+                  <p class="font-sans text-xs text-muted">Join our community group</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Parish info -->
+          <div class="pt-4 border-t border-border">
+            <p class="font-sans text-xs text-muted leading-relaxed">
+              <strong class="font-medium text-ink">St. Ann Catholic Church</strong><br />
+              180 S. Denton Tap Rd.<br />
+              Coppell, TX 75019
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

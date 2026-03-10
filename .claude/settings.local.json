@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.stannya.com)",
+      "WebFetch(domain:www.stannparish.org)",
+      "WebFetch(domain:johnmarkcomer.com)",
+      "WebFetch(domain:bridgetown.church)",
+      "WebFetch(domain:archokc.org)"
+    ]
+  }
+}
