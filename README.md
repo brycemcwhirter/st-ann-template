@@ -1,2 +1,2 @@
 # St. Ann Template 
-(Link)[https://sayatemplate2026.netlify.app/]
+[Link](https://sayatemplate2026.netlify.app/)
